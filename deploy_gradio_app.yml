@@ -1,0 +1,36 @@
+---
+- name: Deploy Gradio App Locally
+  hosts: localhost
+  become: yes
+  connection: local
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Sync application files to local directory
+      synchronize:
+        src: /home/hassaan/DAIS/customer-segmentation-project/
+        dest: /home/hassaan/deployment/
+        archive: yes
+        delete: yes
+        rsync_opts:
+          - "--exclude=venv"
+          - "--exclude=*.log"
+
+    - name: Remove existing Docker container if it exists
+      command: docker rm -f gradio-app
+      ignore_errors: yes
+
+    - name: Build Docker image
+      command: docker build -t gradio-app /home/hassaan/deployment/
+
+    - name: Run Docker container
+      command: docker run -d -p 7860:7860 --name gradio-app gradio-app

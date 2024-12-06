@@ -6,7 +6,7 @@ import seaborn as sns
 import gradio as gr
 
 # Load the data
-data = pd.read_excel("/home/hassaan/DAIS/customer-segmentation-project/data/Online_Retail.xlsx", engine='openpyxl')
+data = pd.read_excel("data/Online_Retail.xlsx", engine='openpyxl')
 
 # # Display the first few rows of the dataset
 # data.head()
